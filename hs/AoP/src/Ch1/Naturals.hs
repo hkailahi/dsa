@@ -91,6 +91,8 @@ natFib = \case
   One           -> One
   Succ (Succ n) -> natFib n + natFib (n + One)
 
+-- Shallow deconstruction. Returns the first argument if Zero, applies the second
+-- argument to the inner value if Succ. 
 nat :: r -> (Nat -> r) -> Nat -> r
 nat z s Zero     = z
 nat z s (Succ n) = s n
@@ -99,6 +101,12 @@ nat z s (Succ n) = s n
 -- Currying + structural recursion
 
 -- Homomorphism of `Nat`
+-- Returns the first argument if Zero, applies the second argument recursively for
+-- each Succ. 
+-- >>> foldNat ([10], \x -> 1 : x) $ toNat 5
+-- [1,1,1,1,1,10]
+-- >>> fromNat $ foldNat (Zero, (+) (toNat 10)) $ toNat 5
+-- 50
 foldNat :: (r, (r -> r)) -> Nat -> r
 foldNat (z, s) = nat z (s . foldNat (z,s))
 
