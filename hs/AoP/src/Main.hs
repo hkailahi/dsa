@@ -1,5 +1,6 @@
 module Main where
 
+import qualified Prelude as P
 import Prelude (IO, putStrLn)
 
 import Ch1.Datatypes

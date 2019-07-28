@@ -1,7 +1,7 @@
 module Ch1.Naturals where
 
 import qualified Prelude as P
-import Prelude (Eq, Show, Ord, ($), Int, (-), (>=), (==), error, take, repeat, (.), foldr)
+import Prelude (Eq, Show, Ord, ($), Int, (-), (>=), (==), error, take, repeat, (.), foldr, Monoid(mappend, mempty), Semigroup((<>)), Foldable)
 
 data Nat =
     Zero
@@ -11,6 +11,26 @@ zero = Zero
 succ = Succ
 pattern One :: Nat
 pattern One = Succ Zero
+
+instance Semigroup Nat where
+  (<>) :: Nat -> Nat -> Nat
+  (<>) n1 Zero     = n1
+  (<>) Zero n2     = n2
+  (<>) n1 One      = Succ n1
+  (<>) One n2      = Succ n2
+  (<>) (Succ n) n2 = n `mappend` Succ n2
+
+
+instance Monoid Nat where
+  mempty = Zero
+
+  mappend :: Nat -> Nat -> Nat
+  mappend n1 Zero     = n1
+  mappend Zero n2     = n2
+  mappend n1 One      = Succ n1
+  mappend One n2      = Succ n2
+  mappend (Succ n) n2 = n `mappend` Succ n2
+  
 
 toNat :: Int -> Nat
 toNat n =
@@ -70,3 +90,33 @@ natFib = \case
   Zero          -> Zero
   One           -> One
   Succ (Succ n) -> natFib n + natFib (n + One)
+
+nat :: r -> (Nat -> r) -> Nat -> r
+nat z s Zero     = z
+nat z s (Succ n) = s n
+
+-------------------------------------------------------------------------------
+-- Currying + structural recursion
+
+-- Homomorphism of `Nat`
+foldNat :: (r, (r -> r)) -> Nat -> r
+foldNat (z, s) = nat z (s . foldNat (z,s))
+
+-- We can define curried versions of addition, multiplication and exponentiation. 
+-- Currying is essential since `foldNat` gives us no way of defining recursive
+-- functions on pairs of numbers
+
+-- >>> fromNat $ plus' (toNat 5) (toNat 5)
+-- 10
+plus' :: Nat -> Nat -> Nat
+plus' m = foldNat (m, Succ)
+
+-- >>> fromNat $ mult' (toNat 5) (toNat 5)
+-- 25
+mult' :: Nat -> Nat -> Nat
+mult' m = foldNat (Zero, plus' m)
+
+-- >>> fromNat $ expn' (toNat 5) (toNat 5)
+-- 3125
+expn' :: Nat -> Nat -> Nat
+expn' m = foldNat (One, mult' m)
