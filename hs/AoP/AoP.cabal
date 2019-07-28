@@ -1,0 +1,33 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.31.2.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: 2f4484e2d65a5860a43e3fb0411ed37dd6d22383e15a7b86ab17a1793866dd77
+
+name:           AoP
+version:        0.1.0.0
+category:       Web
+homepage:       https://github.com/githubuser/AoP#readme
+author:         Author name here
+maintainer:     example@example.com
+copyright:      2019 Author name here
+license:        BSD3
+license-file:   LICENSE
+build-type:     Simple
+extra-source-files:
+    README.md
+
+executable AoP
+  main-is: Main.hs
+  other-modules:
+      Ch1.Datatypes
+      Ch1.Naturals
+      Paths_AoP
+  hs-source-dirs:
+      src
+  default-extensions: ConstraintKinds DataKinds DefaultSignatures DeriveDataTypeable DeriveGeneric EmptyDataDecls FlexibleContexts FlexibleInstances FunctionalDependencies GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MultiParamTypeClasses NamedFieldPuns NoImplicitPrelude NoMonomorphismRestriction OverloadedStrings PackageImports PolyKinds QuasiQuotes RankNTypes RecordWildCards ScopedTypeVariables StandaloneDeriving TemplateHaskell TupleSections TypeApplications TypeFamilies TypeOperators ViewPatterns
+  build-depends:
+      base >=4.7 && <5
+  default-language: Haskell2010

@@ -1,0 +1,53 @@
+name:                AoP
+version:             0.1.0.0
+#synopsis:
+#description:
+homepage:            https://github.com/githubuser/AoP#readme
+license:             BSD3
+author:              Author name here
+maintainer:          example@example.com
+copyright:           2019 Author name here
+category:            Web
+extra-source-files:
+- README.md
+
+default-extensions:
+  - ConstraintKinds
+  - DataKinds
+  - DefaultSignatures
+  - DeriveDataTypeable
+  - DeriveGeneric
+  - EmptyDataDecls
+  - FlexibleContexts
+  - FlexibleInstances
+  - FunctionalDependencies
+  - GADTs
+  - GeneralizedNewtypeDeriving
+  - InstanceSigs
+  - LambdaCase
+  - MultiParamTypeClasses
+  - NamedFieldPuns
+  - NoImplicitPrelude
+  - NoMonomorphismRestriction
+  - OverloadedStrings
+  - PackageImports
+  - PolyKinds
+  - QuasiQuotes
+  - RankNTypes
+  - RecordWildCards
+  - ScopedTypeVariables
+  - StandaloneDeriving
+  - TemplateHaskell
+  - TupleSections
+  - TypeApplications
+  - TypeFamilies
+  - TypeOperators
+  - ViewPatterns
+
+dependencies:
+  - base >= 4.7 && < 5
+
+executables:
+  AoP:
+    source-dirs:      src
+    main:             Main.hs
