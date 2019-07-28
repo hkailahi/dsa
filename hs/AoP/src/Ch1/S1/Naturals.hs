@@ -1,7 +1,7 @@
-module Ch1.Naturals where
+module Ch1.S1.Naturals where
 
 import qualified Prelude as P
-import Prelude (Eq, Show, Ord, ($), Int, (-), (>=), (==), error, take, repeat, (.), foldr, Monoid(mappend, mempty), Semigroup((<>)), Foldable)
+import Prelude (Eq, Show, Ord, ($), Int, (>=), (==), error, take, repeat, (.), foldr, Monoid(mappend, mempty), Semigroup((<>)), Foldable)
 
 data Nat =
     Zero
@@ -55,6 +55,13 @@ mult :: (Nat, Nat) -> Nat
 mult (m, Zero)   = Zero
 mult (m, Succ n) = plus (m, mult (m, n))
 
+-- hey i'm too lazy for this
+sub :: (Nat, Nat) -> Nat
+sub (n, m) = toNat $ P.subtract (fromNat m) (fromNat n)
+
+(-) = P.curry sub
+infixl 6 -
+
 (+) = P.curry plus
 infixl 6 +
 
@@ -65,7 +72,7 @@ shittyFact :: Int -> Int
 shittyFact = \case
   0 -> 1
   -- behold shitty n+k patterns
-  n | n >= 1 -> let k = n - 1
+  n | n >= 1 -> let k = P.subtract n 1
             in  (k P.+ 1) P.* shittyFact k
   otherwise -> error "lol"
 
@@ -74,7 +81,7 @@ shittyFib = \case
   0 ->  0
   1 -> 1
   -- behold shitty n+k patterns
-  n | n >= 2 -> let k = n - 2
+  n | n >= 2 -> let k = P.subtract n 2
                  in shittyFib k P.+ shittyFib (k P.+ 1)
   otherwise  -> error "lol"
 
@@ -93,7 +100,7 @@ natFib = \case
 
 -- Shallow deconstruction. Returns the first argument if Zero, applies the second
 -- argument to the inner value if Succ. 
-nat :: r -> (Nat -> r) -> Nat -> r
+nat :: a -> (Nat -> a) -> Nat -> a
 nat z s Zero     = z
 nat z s (Succ n) = s n
 
@@ -107,8 +114,12 @@ nat z s (Succ n) = s n
 -- [1,1,1,1,1,10]
 -- >>> fromNat $ foldNat (Zero, (+) (toNat 10)) $ toNat 5
 -- 50
-foldNat :: (r, (r -> r)) -> Nat -> r
+foldNat :: (a, a -> a) -> Nat -> a
 foldNat (z, s) = nat z (s . foldNat (z,s))
+
+foldNat' :: (a, a -> a) -> Nat -> a
+foldNat' (c, h) Zero = c                          -- c replaces `Zero`
+foldNat' (c, h) n = h (foldNat' (c, h) (n - One)) -- h replaces `Succ`
 
 -- We can define curried versions of addition, multiplication and exponentiation. 
 -- Currying is essential since `foldNat` gives us no way of defining recursive
@@ -117,14 +128,42 @@ foldNat (z, s) = nat z (s . foldNat (z,s))
 -- >>> fromNat $ plus' (toNat 5) (toNat 5)
 -- 10
 plus' :: Nat -> Nat -> Nat
-plus' m = foldNat (m, Succ)
+plus' m n = foldNat (m, Succ) n
 
 -- >>> fromNat $ mult' (toNat 5) (toNat 5)
 -- 25
 mult' :: Nat -> Nat -> Nat
-mult' m = foldNat (Zero, plus' m)
+mult' m n = foldNat (Zero, plus' m) n
 
 -- >>> fromNat $ expn' (toNat 5) (toNat 5)
 -- 3125
 expn' :: Nat -> Nat -> Nat
-expn' m = foldNat (One, mult' m)
+expn' m n = foldNat (One, mult' m) n
+
+-- More Recursion
+
+-- "Out-Right"
+-- Projection function that selects right elements of pair
+outl :: (a, b) -> a
+outl = P.fst
+
+-- "Out-Right"
+-- Projection function that selects right elements of pair
+outr :: (a, b) -> b
+outr = P.snd
+
+fact' :: Nat -> Nat
+fact' = outr . foldNat ((Zero, One), f)
+  where
+    f :: (Nat, Nat) -> (Nat, Nat)
+    f (m, n) = (m + One, (m + One) * n)
+
+-- Computed in linear time, whereas recursive definition, if implemented directly,
+-- would require exponential time
+-- Demonstrates idea of "tabulation" in which function values are stored for
+-- subsequent use rather than being freshly calculated each time (think DP)
+fib' :: Nat -> Nat
+fib' = outl . foldNat ((Zero, One), f)
+  where
+    f :: (Nat, Nat) -> (Nat, Nat)
+    f (m, n) = (n, m + n)

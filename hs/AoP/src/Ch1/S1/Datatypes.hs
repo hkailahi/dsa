@@ -1,4 +1,4 @@
-module Ch1.Datatypes where
+module Ch1.S1.Datatypes where
 
 import Prelude (Show, Eq) -- hiding (Bool (False, True), Char, not)
 
