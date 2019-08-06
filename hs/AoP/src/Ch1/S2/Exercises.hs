@@ -1,4 +1,4 @@
-module Ch1.S1.Exercises where
+module Ch1.S2.Exercises where
 
 -- Exercises
 

@@ -1,4 +1,4 @@
-module Ch1.S1.Naturals where
+module Ch1.S2.Naturals where
 
 import qualified Prelude as P
 import Prelude (Eq, Show, Ord, ($), Int, (>=), (==), error, take, repeat, (.), foldr, Monoid(mappend, mempty), Semigroup((<>)), Foldable)

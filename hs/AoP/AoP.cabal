@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 7080aed3c95fdbe9073a64cb378c12dbfe0d982d8a52ae157d716e469274fad2
+-- hash: 374421317e5207d4805136247d21b51fbec79588f28353470173648ecdde8196
 
 name:           AoP
 version:        0.1.0.0
@@ -23,8 +23,10 @@ executable AoP
   main-is: Main.hs
   other-modules:
       Ch1.S1.Datatypes
-      Ch1.S1.Exercises
-      Ch1.S1.Naturals
+      Ch1.S2.Exercises
+      Ch1.S2.Naturals
+      Ch1.S3.Lists
+      Ch1.S4.Trees
       Paths_AoP
   hs-source-dirs:
       src
